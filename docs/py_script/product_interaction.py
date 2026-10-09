@@ -169,24 +169,72 @@ def handle_preview_hover(event):
         ensure_preview_selector(card)
 
 
-def rotate_mobile_previews():
-    if document.hidden or not window.matchMedia("(max-width: 640px)").matches:
+def rotate_card_preview(card):
+    if (
+        document.hidden
+        or card.hidden
+        or not window.matchMedia("(max-width: 640px)").matches
+    ):
         return
 
-    for card in document.querySelectorAll("#shoe-grid .product-card"):
-        options = list(card.querySelectorAll(".preview-option"))
-        if len(options) < 2:
-            continue
+    options = list(card.querySelectorAll(".preview-option"))
+    if len(options) < 2:
+        return
 
-        image = card.querySelector(".product-image")
-        current_image = image.getAttribute("src").rsplit("/", 1)[-1]
-        alternatives = [
-            option
-            for option in options
-            if option.getAttribute("data-image") != current_image
-        ]
-        if alternatives:
-            show_preview(random.choice(alternatives), animate=True)
+    image = card.querySelector(".product-image")
+    current_image = image.getAttribute("src").rsplit("/", 1)[-1]
+    alternatives = [
+        option
+        for option in options
+        if option.getAttribute("data-image") != current_image
+    ]
+    if alternatives:
+        show_preview(random.choice(alternatives), animate=True)
+
+
+active_card_timers = {}
+visible_cards = {}
+
+
+def stop_card_timer(card_id):
+    timer = active_card_timers.pop(card_id, None)
+    if timer is not None:
+        window.clearInterval(timer[0])
+
+
+def start_card_timer(card_id, card):
+    if card_id in active_card_timers or card.hidden:
+        return
+
+    timer_callback = create_proxy(lambda: rotate_card_preview(card))
+    interval_id = window.setInterval(timer_callback, 5000)
+    active_card_timers[card_id] = (interval_id, timer_callback)
+
+
+def sync_visible_card_timers(_event=None):
+    should_run = (
+        not document.hidden
+        and window.matchMedia("(max-width: 640px)").matches
+    )
+    if not should_run:
+        for card_id in list(active_card_timers):
+            stop_card_timer(card_id)
+        return
+
+    for card_id, card in visible_cards.items():
+        start_card_timer(card_id, card)
+
+
+def on_cards_intersect(entries, _observer):
+    for entry in entries:
+        card = entry.target
+        card_id = card.getAttribute("data-catalog-index")
+        if entry.isIntersecting and not card.hidden:
+            visible_cards[card_id] = card
+        else:
+            visible_cards.pop(card_id, None)
+            stop_card_timer(card_id)
+    sync_visible_card_timers()
 
 
 shoe_grid = document.querySelector("#shoe-grid")
@@ -194,8 +242,22 @@ if shoe_grid is not None:
     shoe_grid.addEventListener("click", create_proxy(handle_catalog_click))
     shoe_grid.addEventListener("mouseover", create_proxy(handle_preview_hover))
     shoe_grid.addEventListener("mouseout", create_proxy(restore_original_image))
-    mobile_preview_timer = create_proxy(rotate_mobile_previews)
-    window.setInterval(mobile_preview_timer, 5000)
+    mobile_preview_state_handler = create_proxy(sync_visible_card_timers)
+    window.addEventListener("resize", mobile_preview_state_handler)
+    document.addEventListener("visibilitychange", mobile_preview_state_handler)
+    intersection_handler = create_proxy(on_cards_intersect)
+    card_observer = window.IntersectionObserver.new(
+        intersection_handler, {"threshold": 0.1}
+    )
+
+    def observe_catalog_cards(_event=None):
+        for card in shoe_grid.querySelectorAll(".product-card"):
+            card_observer.observe(card)
+
+    catalog_ready_handler = create_proxy(observe_catalog_cards)
+    document.addEventListener("shoe-catalog-ready", catalog_ready_handler)
+    observe_catalog_cards()
+    sync_visible_card_timers()
 
 if document.querySelector("#product-detail") is not None:
     document.addEventListener("click", create_proxy(handle_detail_click))

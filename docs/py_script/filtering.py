@@ -4,6 +4,9 @@ from js import document, window
 from pyodide.ffi import create_proxy
 
 
+card_tag_cache = {}
+
+
 def get_selected_filters():
     selected_by_group = {}
     for checkbox in document.querySelectorAll(
@@ -25,7 +28,12 @@ def apply_filters_and_sort(_event=None):
     visible_count = 0
 
     for card in cards:
-        tags = json.loads(card.getAttribute("data-tags") or "{}")
+        catalog_index = card.getAttribute("data-catalog-index")
+        if catalog_index not in card_tag_cache:
+            card_tag_cache[catalog_index] = json.loads(
+                card.getAttribute("data-tags") or "{}"
+            )
+        tags = card_tag_cache[catalog_index]
         matches = all(
             selected_values.intersection(tags.get(group, []))
             for group, selected_values in selected_by_group.items()
@@ -51,8 +59,9 @@ def apply_filters_and_sort(_event=None):
     else:
         cards.sort(key=lambda card: int(card.getAttribute("data-catalog-index")))
 
-    for card in cards:
-        grid.append(card)
+    if cards != list(grid.querySelectorAll(".product-card")):
+        for card in cards:
+            grid.append(card)
 
     status = document.querySelector("#filter-status")
     results = document.querySelector(".catalog-results")
@@ -68,6 +77,11 @@ def apply_filters_and_sort(_event=None):
 
 def on_catalog_ready(_event):
     apply_filters_and_sort()
+
+
+def on_filter_change(event):
+    if event.target.matches("input[data-filter-group]"):
+        apply_filters_and_sort()
 
 
 active_filter_details = None
@@ -148,7 +162,7 @@ def handle_filter_click(event):
     restore_active_filter_options()
 
 
-filter_change_handler = create_proxy(apply_filters_and_sort)
+filter_change_handler = create_proxy(on_filter_change)
 sidebar = document.querySelector(".filter-sidebar")
 if sidebar is not None:
     document.addEventListener("change", filter_change_handler)
@@ -166,7 +180,7 @@ if sidebar is not None:
 
 sort_select = document.querySelector("#shoe-sort")
 if sort_select is not None:
-    sort_select.addEventListener("change", filter_change_handler)
+    sort_select.addEventListener("change", create_proxy(apply_filters_and_sort))
 
 catalog_ready_handler = create_proxy(on_catalog_ready)
 document.addEventListener("shoe-catalog-ready", catalog_ready_handler)
