@@ -28,6 +28,11 @@ def render_catalog(shoes):
 
     for shoe in shoes:
         card = template.content.cloneNode(True)
+        card_element = card.querySelector(".product-card")
+        card_element.setAttribute("data-name", shoe["name"])
+        card_element.setAttribute("data-price", "" if shoe["price"] is None else str(shoe["price"]))
+        card_element.setAttribute("data-tags", json.dumps(shoe.get("tags", {})))
+        card_element.setAttribute("data-catalog-index", str(len(shoe_grid.children)))
         image = card.querySelector(".product-image")
         image.src = IMAGE_DIRECTORY + shoe["images"][0]
         image.alt = shoe["name"]
@@ -71,6 +76,8 @@ def render_catalog(shoes):
             preview_selector.remove()
 
         shoe_grid.append(card)
+
+    document.dispatchEvent(window.Event.new("shoe-catalog-ready"))
 
 
 def render_product(shoes):
@@ -136,6 +143,5 @@ async def initialize():
             status.hidden = True
         document.querySelector("#product-detail").hidden = True
         render_product(shoes)
-
 
 asyncio.ensure_future(initialize())

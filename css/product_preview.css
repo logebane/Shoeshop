@@ -68,6 +68,21 @@
   padding: 0 0 0 8px;
 }
 
+.product-back-button {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px auto;
+  color: #111;
+  text-decoration: none;
+}
+
+.product-back-button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 4px;
+}
+
 .product-purchase h1 {
   margin: 0 0 4px;
   font-size: clamp(1.5rem, 2.2vw, 2rem);
@@ -177,17 +192,23 @@
   cursor: pointer;
 }
 
-.add-to-bag {
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
-}
-
 .detail-favorite {
   margin-top: 12px;
   border: 1px solid #d0d0d0;
   background: #fff;
   color: #111;
+}
+
+.detail-favorite[aria-pressed="true"] {
+  border-color: #f32828;
+  color: #f32828;
+  cursor: default;
+}
+
+.detail-favorite[aria-pressed="true"]:hover {
+  border-color: #f32828;
+  background: #fff;
+  color: #f32828;
 }
 
 .product-not-found a {

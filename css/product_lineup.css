@@ -28,6 +28,37 @@
   gap: 72px;
 }
 
+.catalog-results {
+  min-width: 0;
+}
+
+.catalog-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 0 0 18px;
+}
+
+#filter-status {
+  flex: 1;
+  margin: 0;
+}
+
+#shoe-sort {
+  min-height: 38px;
+  padding: 6px 30px 6px 10px;
+  border: 1px solid #dedede;
+  border-radius: 4px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+
+.product-card[hidden] {
+  display: none;
+}
+
 .filter-sidebar {
   position: sticky;
   top: 86px;

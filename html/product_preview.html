@@ -54,22 +54,24 @@
                 </div>
             </div>
             <div class="product-purchase">
+                <a class="product-back-button tab" href="product_lineup_page.html" aria-label="Back to shoes">
+                    <span aria-hidden="true">←</span>
+                    <span>Back</span>
+                </a>
                 <h1 id="detail-name"></h1>
                 <p id="detail-category" class="detail-category"></p>
                 <p id="detail-price" class="detail-price"></p>
 
                 <div class="size-heading">
                     <h2>Select Size</h2>
-                    <details class="size-guide">
-                        <summary>↔ &nbsp; Size Guide</summary>
-                        <p>Sizes are shown in US men's and women's sizing.</p>
                     </details>
                 </div>
+
                 <div id="size-options" class="size-options" aria-label="Available sizes"></div>
                 <p class="size-availability-note">Sample size options only; live inventory is not connected.</p>
                 <p id="product-action-status" class="product-action-status" role="status"></p>
-                <button id="add-to-bag" class="add-to-bag" type="button">Add to Bag</button>
-                <button id="detail-favorite" class="detail-favorite" type="button" aria-pressed="false">
+                <button id="add-to-bag" class="add-to-bag btn-gradient" type="button">Add to Bag</button>
+                <button id="detail-favorite" class="detail-favorite btn-fill" type="button" aria-pressed="false">
                     Favourite ♡
                 </button>
             </div>
