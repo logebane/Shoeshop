@@ -3,6 +3,7 @@ def init_header_scroll_behavior():
     from pyodide.ffi import create_proxy
 
     header = document.querySelector("header")
+    back_to_top = document.querySelector(".back-to-top")
     previous_scroll_y = window.scrollY
 
     def handle_scroll(_event):
@@ -10,6 +11,8 @@ def init_header_scroll_behavior():
 
         current_scroll_y = window.scrollY
         scrolling_down = current_scroll_y > previous_scroll_y
+        if back_to_top is not None:
+            back_to_top.classList.toggle("back-to-top-hidden", current_scroll_y <= 8)
 
         if current_scroll_y <= header.offsetHeight or not scrolling_down:
             header.classList.remove("header-hidden")
@@ -20,6 +23,7 @@ def init_header_scroll_behavior():
 
     scroll_handler = create_proxy(handle_scroll)
     window.addEventListener("scroll", scroll_handler)
+    handle_scroll(None)
 
 
 init_header_scroll_behavior()

@@ -27,6 +27,13 @@ html {
   line-height: 1;
   text-align: center;
   text-decoration: none;
+  transition: opacity 160ms ease, visibility 160ms ease;
+}
+
+.back-to-top.back-to-top-hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 .back-to-top-label {
