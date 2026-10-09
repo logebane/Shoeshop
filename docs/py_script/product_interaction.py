@@ -2,10 +2,16 @@ from js import document, window
 from pyodide.ffi import create_proxy
 
 
+PAGE_DIRECTORY = str(window.location.pathname).rsplit("/", 1)[0]
+RESOURCE_PREFIX = "../" if PAGE_DIRECTORY.endswith("/html") else ""
+IMAGE_DIRECTORY = f"{RESOURCE_PREFIX}product_images/"
+STORE_ASSET_DIRECTORY = f"{RESOURCE_PREFIX}store_assets/"
+
+
 def show_preview(preview_button):
     card = preview_button.closest(".product-card")
     image = card.querySelector(".product-image")
-    image.src = f"../product_images/{preview_button.getAttribute('data-image')}"
+    image.src = f"{IMAGE_DIRECTORY}{preview_button.getAttribute('data-image')}"
     image.alt = preview_button.getAttribute("data-name")
     for option in card.querySelectorAll(".preview-option"):
         option.setAttribute("aria-pressed", str(option == preview_button).lower())
@@ -21,7 +27,7 @@ def restore_original_image(event):
         return
 
     image = card.querySelector(".product-image")
-    image.src = f"../product_images/{image.getAttribute('data-original-image')}"
+    image.src = f"{IMAGE_DIRECTORY}{image.getAttribute('data-original-image')}"
     image.alt = image.getAttribute("data-original-name")
     for option in card.querySelectorAll(".preview-option"):
         is_original = option.getAttribute("data-image") == image.getAttribute(
@@ -68,7 +74,7 @@ def ensure_preview_selector(card):
             option.setAttribute("data-product-url", product_link.getAttribute("href"))
 
         thumbnail = document.createElement("img")
-        thumbnail.src = f"../product_images/{image_name}"
+        thumbnail.src = f"{IMAGE_DIRECTORY}{image_name}"
         thumbnail.alt = ""
         thumbnail.loading = "lazy"
         option.append(thumbnail)
@@ -95,9 +101,9 @@ def handle_catalog_click(event):
             "Remove from favorites" if is_favorite else "Add to favorites",
         )
         favorite_button.querySelector(".favorite-icon").src = (
-            "../store_assets/favorite_2.svg"
+            f"{STORE_ASSET_DIRECTORY}favorite_2.svg"
             if is_favorite
-            else "../store_assets/favorite.svg"
+            else f"{STORE_ASSET_DIRECTORY}favorite.svg"
         )
 
 
@@ -112,7 +118,7 @@ def handle_detail_click(event):
     thumbnail = event.target.closest(".product-thumbnail")
     if thumbnail is not None:
         main_image = document.querySelector("#gallery-main-image")
-        main_image.src = f"../product_images/{thumbnail.getAttribute('data-image')}"
+        main_image.src = f"{IMAGE_DIRECTORY}{thumbnail.getAttribute('data-image')}"
         for option in document.querySelectorAll(".product-thumbnail"):
             option.setAttribute("aria-pressed", str(option == thumbnail).lower())
         return

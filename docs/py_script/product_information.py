@@ -6,11 +6,13 @@ from js import document, window
 from pyodide.http import pyfetch
 
 
-IMAGE_DIRECTORY = "../product_images/"
+PAGE_DIRECTORY = str(window.location.pathname).rsplit("/", 1)[0]
+RESOURCE_PREFIX = "../" if PAGE_DIRECTORY.endswith("/html") else ""
+IMAGE_DIRECTORY = f"{RESOURCE_PREFIX}product_images/"
 
 
 async def load_shoes():
-    response = await pyfetch("../data/shoes.json")
+    response = await pyfetch(f"{RESOURCE_PREFIX}data/shoes.json")
     if not response.ok:
         raise RuntimeError(f"Could not load shoe data (HTTP {response.status}).")
     return json.loads(await response.string())
