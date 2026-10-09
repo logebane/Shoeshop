@@ -71,6 +71,7 @@
 .product-back-button {
   display: flex;
   width: fit-content;
+  height: 29px;
   align-items: center;
   gap: 8px;
   margin: 0 0 18px auto;

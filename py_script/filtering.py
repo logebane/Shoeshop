@@ -55,6 +55,9 @@ def apply_filters_and_sort(_event=None):
         grid.append(card)
 
     status = document.querySelector("#filter-status")
+    results = document.querySelector(".catalog-results")
+    if results is not None:
+        results.classList.toggle("is-empty", visible_count == 0)
     if status is not None:
         status.textContent = (
             f"Showing {visible_count} of {len(cards)} shoes"

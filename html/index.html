@@ -12,6 +12,15 @@
 </head>
 
 <body>
+    <div class="site-loader" id="site-loader" role="status" aria-label="Loading website">
+        <div class="loader-ladder" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <span class="site-loader-label">Loading...</span>
+    </div>
     <!-- header -->
     <header>
         <!-- Left Section -->
@@ -23,7 +32,7 @@
         <!-- Middle Section -->
         <div class="middleSection">
             <div class="tab">
-                <a href="landing_page.html">Home</a>
+                <a href="index.html">Home</a>
             </div>
             <div class="tab">
                 <a href="product_lineup_page.html">Shoes</a>
@@ -39,6 +48,7 @@
     </header>
 
     <div style="height: 2000px;">Scroll test</div>
+    <script type="py" src="../py_script/loading.py"></script>
     <script type="py" src="../py_script/scrolling.py"></script>
 </body>
 

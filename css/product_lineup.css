@@ -4,6 +4,45 @@
   padding: 44px 32px 80px 16px;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+.back-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 50;
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-content: center;
+  gap: 1px;
+  border: 1px solid #dedede;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 3px 12px rgb(0 0 0 / 14%);
+  font-size: 1.25rem;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+}
+
+.back-to-top-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.back-to-top:hover {
+  background: #f5ebeb;
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
 .product-intro {
   margin-bottom: 24px;
 }
@@ -30,6 +69,27 @@
 
 .catalog-results {
   min-width: 0;
+}
+
+.catalog-results.is-empty {
+  display: flex;
+  min-height: 50vh;
+  flex-direction: column;
+}
+
+.catalog-results.is-empty .catalog-toolbar {
+  flex: 1;
+  justify-content: center;
+}
+
+.catalog-results.is-empty #filter-status {
+  flex: none;
+  text-align: center;
+}
+
+.catalog-results.is-empty .catalog-toolbar > label,
+.catalog-results.is-empty #shoe-sort {
+  display: none;
 }
 
 .catalog-toolbar {
@@ -357,6 +417,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .product-card,
   .product-preview-selector {
     transition: none;

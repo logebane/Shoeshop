@@ -12,7 +12,16 @@
     <title>Unisole</title>
 </head>
 
-<body>
+<body id="page-top" data-loader-mode="shoe-data">
+    <div class="site-loader" id="site-loader" role="status" aria-label="Loading website">
+        <div class="loader-ladder" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <span class="site-loader-label">Loading...</span>
+    </div>
     <!-- header -->
     <header>
         <!-- Left Section -->
@@ -24,7 +33,7 @@
         <!-- Middle Section -->
         <div class="middleSection">
             <div class="tab">
-                <a href="landing_page.html">Home</a>
+                <a href="index.html">Home</a>
             </div>
             <div class="tab">
                 <a href="product_lineup_page.html">Shoes</a>
@@ -44,7 +53,7 @@
             <p class="eyebrow">UNISOLE COLLECTION</p>
             <h1>Shoes</h1>
         </div>
-        <p id="data-status" role="status">Loading shoe information…</p>
+        <p id="data-status" role="status" hidden></p>
         <div class="catalog-layout">
             <aside class="filter-sidebar" aria-label="Product filters">
                 <details class="filter-section" open>
@@ -152,6 +161,12 @@
         </article>
     </template>
 
+    <a class="back-to-top" href="#page-top" aria-label="Scroll to the top of the page">
+        <span aria-hidden="true">↑</span>
+        <span class="back-to-top-label">Top</span>
+    </a>
+
+    <script type="py" src="../py_script/loading.py"></script>
     <script type="py" src="../py_script/product_information.py"></script>
     <script type="py" src="../py_script/filtering.py"></script>
     <script type="py" src="../py_script/product_interaction.py"></script>

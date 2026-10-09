@@ -12,7 +12,16 @@
     <title>Shoe details | UniSole</title>
 </head>
 
-<body>
+<body data-loader-mode="shoe-data">
+    <div class="site-loader" id="site-loader" role="status" aria-label="Loading website">
+        <div class="loader-ladder" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <span class="site-loader-label">Loading...</span>
+    </div>
     <!-- header -->
     <header>
         <!-- Left Section -->
@@ -24,7 +33,7 @@
         <!-- Middle Section -->
         <div class="middleSection">
             <div class="tab">
-                <a href="landing_page.html">Home</a>
+                <a href="index.html">Home</a>
             </div>
             <div class="tab">
                 <a href="product_lineup_page.html">Shoes</a>
@@ -40,7 +49,7 @@
     </header>
 
     <main class="product-detail-page">
-        <p id="data-status" role="status">Loading shoe information…</p>
+        <p id="data-status" role="status" hidden></p>
         <div id="product-not-found" class="product-not-found" hidden>
             <h1>Shoe not found</h1>
             <p>That shoe may have been removed from the collection.</p>
@@ -78,6 +87,7 @@
         </section>
     </main>
 
+    <script type="py" src="../py_script/loading.py"></script>
     <script type="py" src="../py_script/product_information.py"></script>
     <script type="py" src="../py_script/product_interaction.py"></script>
     <script type="py" src="../py_script/scrolling.py"></script>

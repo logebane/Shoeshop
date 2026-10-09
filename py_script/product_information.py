@@ -22,6 +22,13 @@ def set_text(selector, value):
         element.textContent = value
 
 
+def signal_shoe_data_state(state):
+    body = document.body
+    body.setAttribute("data-shoe-data-state", state)
+    event_name = "shoe-data-ready" if state == "ready" else "shoe-data-error"
+    document.dispatchEvent(window.Event.new(event_name))
+
+
 def render_catalog(shoes):
     shoe_grid = document.querySelector("#shoe-grid")
     template = document.querySelector("#shoe-card-template")
@@ -64,6 +71,9 @@ def render_catalog(shoes):
             )
             preview_button.setAttribute("data-image", image_name)
             preview_button.setAttribute("data-name", shoe["name"])
+            preview_button.setAttribute(
+                "data-product-url", product_link.getAttribute("href")
+            )
 
             preview_thumbnail = document.createElement("img")
             preview_thumbnail.src = IMAGE_DIRECTORY + image_name
@@ -126,22 +136,25 @@ def render_product(shoes):
 async def initialize():
     try:
         shoes = await load_shoes()
+        if document.querySelector("#shoe-grid") is not None:
+            render_catalog(shoes)
+            status = document.querySelector("#data-status")
+            if status is not None:
+                status.hidden = True
+        elif document.querySelector("#product-detail") is not None:
+            status = document.querySelector("#data-status")
+            if status is not None:
+                status.hidden = True
+            document.querySelector("#product-detail").hidden = True
+            render_product(shoes)
     except Exception as error:
         status = document.querySelector("#data-status")
         if status is not None:
             status.textContent = f"Unable to load shoe information: {error}"
+            status.hidden = False
+        signal_shoe_data_state("error")
         raise
 
-    if document.querySelector("#shoe-grid") is not None:
-        render_catalog(shoes)
-        status = document.querySelector("#data-status")
-        if status is not None:
-            status.hidden = True
-    elif document.querySelector("#product-detail") is not None:
-        status = document.querySelector("#data-status")
-        if status is not None:
-            status.hidden = True
-        document.querySelector("#product-detail").hidden = True
-        render_product(shoes)
+    signal_shoe_data_state("ready")
 
 asyncio.ensure_future(initialize())
