@@ -1,3 +1,5 @@
+import random
+
 from js import document, window
 from pyodide.ffi import create_proxy
 
@@ -8,11 +10,15 @@ IMAGE_DIRECTORY = f"{RESOURCE_PREFIX}product_images/"
 STORE_ASSET_DIRECTORY = f"{RESOURCE_PREFIX}store_assets/"
 
 
-def show_preview(preview_button):
+def show_preview(preview_button, animate=False):
     card = preview_button.closest(".product-card")
     image = card.querySelector(".product-image")
     image.src = f"{IMAGE_DIRECTORY}{preview_button.getAttribute('data-image')}"
     image.alt = preview_button.getAttribute("data-name")
+    if animate:
+        image.classList.remove("mobile-image-transition")
+        image.offsetWidth
+        image.classList.add("mobile-image-transition")
     for option in card.querySelectorAll(".preview-option"):
         option.setAttribute("aria-pressed", str(option == preview_button).lower())
 
@@ -163,11 +169,33 @@ def handle_preview_hover(event):
         ensure_preview_selector(card)
 
 
+def rotate_mobile_previews():
+    if document.hidden or not window.matchMedia("(max-width: 640px)").matches:
+        return
+
+    for card in document.querySelectorAll("#shoe-grid .product-card"):
+        options = list(card.querySelectorAll(".preview-option"))
+        if len(options) < 2:
+            continue
+
+        image = card.querySelector(".product-image")
+        current_image = image.getAttribute("src").rsplit("/", 1)[-1]
+        alternatives = [
+            option
+            for option in options
+            if option.getAttribute("data-image") != current_image
+        ]
+        if alternatives:
+            show_preview(random.choice(alternatives), animate=True)
+
+
 shoe_grid = document.querySelector("#shoe-grid")
 if shoe_grid is not None:
     shoe_grid.addEventListener("click", create_proxy(handle_catalog_click))
     shoe_grid.addEventListener("mouseover", create_proxy(handle_preview_hover))
     shoe_grid.addEventListener("mouseout", create_proxy(restore_original_image))
+    mobile_preview_timer = create_proxy(rotate_mobile_previews)
+    window.setInterval(mobile_preview_timer, 5000)
 
 if document.querySelector("#product-detail") is not None:
     document.addEventListener("click", create_proxy(handle_detail_click))

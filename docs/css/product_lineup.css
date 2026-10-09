@@ -228,6 +228,19 @@ html {
   box-sizing: border-box;
 }
 
+.product-image.mobile-image-transition {
+  animation: mobile-image-fade 350ms ease;
+}
+
+@keyframes mobile-image-fade {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .product-image-link {
   display: block;
   width: 100%;
@@ -266,6 +279,15 @@ html {
   width: 24px;
   height: 24px;
   object-fit: contain;
+  transition: opacity 160ms ease;
+}
+
+.favorite-button:not([aria-pressed="true"]) .favorite-icon {
+  opacity: 0.7;
+}
+
+.favorite-button:not([aria-pressed="true"]):hover .favorite-icon {
+  opacity: 1;
 }
 
 .favorite-button:not([aria-pressed="true"]):hover::before {
@@ -396,12 +418,7 @@ html {
   }
 
   .product-preview-selector {
-    position: static;
-    box-shadow: none;
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-    visibility: visible;
+    display: none;
   }
 }
 

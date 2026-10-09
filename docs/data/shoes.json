@@ -3,7 +3,7 @@
     "id": "shoe-1",
     "name": "Shoe 1",
     "price": null,
-    "category": "Men Performance",
+    "category": "Running",
     "images": ["p1.png", "p3.png", "p11.png"],
     "sizes": [
       "US M 6 / W 7.5",
@@ -200,6 +200,74 @@
       "colour": ["Black"],
       "shoeHeight": ["Low"],
       "sport": ["Running"]
+    }
+  },
+  {
+    "id": "shoe-12",
+    "name": "Shoe 12",
+    "price": null,
+    "category": "Men Performance",
+    "images": ["p12.JPG"],
+    "sizes": ["US M 6 / W 7.5", "US M 6.5 / W 8", "US M 7 / W 8.5", "US M 7.5 / W 9", "US M 8 / W 9.5", "US M 8.5 / W 10", "US M 9 / W 10.5", "US M 9.5 / W 11", "US M 10 / W 11.5", "US M 11 / W 12.5", "US M 12 / W 13.5", "US M 13 / W 14.5"],
+    "tags": {
+      "gender": ["Men"],
+      "price": [],
+      "saleOffers": ["New arrivals"],
+      "size": ["6", "7", "8", "9", "10", "11", "12"],
+      "colour": ["Black"],
+      "shoeHeight": ["Low"],
+      "sport": ["Casual"]
+    }
+  },
+  {
+    "id": "shoe-13",
+    "name": "Shoe 13",
+    "price": null,
+    "category": "Men Performance",
+    "images": ["p13.png"],
+    "sizes": ["US M 6 / W 7.5", "US M 6.5 / W 8", "US M 7 / W 8.5", "US M 7.5 / W 9", "US M 8 / W 9.5", "US M 8.5 / W 10", "US M 9 / W 10.5", "US M 9.5 / W 11", "US M 10 / W 11.5", "US M 11 / W 12.5", "US M 12 / W 13.5", "US M 13 / W 14.5"],
+    "tags": {
+      "gender": ["Men"],
+      "price": [],
+      "saleOffers": ["New arrivals"],
+      "size": ["6", "7", "8", "9", "10", "11", "12"],
+      "colour": ["Black"],
+      "shoeHeight": ["Low"],
+      "sport": ["Casual"]
+    }
+  },
+  {
+    "id": "shoe-14",
+    "name": "Shoe 14",
+    "price": null,
+    "category": "Men Performance",
+    "images": ["p14.png"],
+    "sizes": ["US M 6 / W 7.5", "US M 6.5 / W 8", "US M 7 / W 8.5", "US M 7.5 / W 9", "US M 8 / W 9.5", "US M 8.5 / W 10", "US M 9 / W 10.5", "US M 9.5 / W 11", "US M 10 / W 11.5", "US M 11 / W 12.5", "US M 12 / W 13.5", "US M 13 / W 14.5"],
+    "tags": {
+      "gender": ["Men"],
+      "price": [],
+      "saleOffers": ["New arrivals"],
+      "size": ["6", "7", "8", "9", "10", "11", "12"],
+      "colour": ["Black"],
+      "shoeHeight": ["Low"],
+      "sport": ["Sneakers"]
+    }
+  },
+  {
+    "id": "shoe-15",
+    "name": "Shoe 15",
+    "price": null,
+    "category": "Men Performance",
+    "images": ["p15.png"],
+    "sizes": ["US M 6 / W 7.5", "US M 6.5 / W 8", "US M 7 / W 8.5", "US M 7.5 / W 9", "US M 8 / W 9.5", "US M 8.5 / W 10", "US M 9 / W 10.5", "US M 9.5 / W 11", "US M 10 / W 11.5", "US M 11 / W 12.5", "US M 12 / W 13.5", "US M 13 / W 14.5"],
+    "tags": {
+      "gender": ["Men"],
+      "price": [],
+      "saleOffers": ["New arrivals"],
+      "size": ["6", "7", "8", "9", "10", "11", "12"],
+      "colour": ["white"],
+      "shoeHeight": ["Mid"],
+      "sport": ["Sneakers"]
     }
   }
 ]
