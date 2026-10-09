@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/landing_page.css">
+    <link rel="stylesheet" href="../css/button_styling.css">
+    <link rel="stylesheet" href="../css/product_preview.css">
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <title>Shoe details | UniSole</title>
+</head>
+
+<body>
+    <!-- header -->
+    <header>
+        <!-- Left Section -->
+        <div class="leftSection">
+            <div class="logo">
+                <img src="../store_assets/logo1.png" alt="Logo" width="50" height="50">
+            </div>
+        </div>
+        <!-- Middle Section -->
+        <div class="middleSection">
+            <div class="tab">
+                <a href="landing_page.html">Home</a>
+            </div>
+            <div class="tab">
+                <a href="product_lineup_page.html">Shoes</a>
+            </div>
+            <div class="tab">
+                <a href="product_lineup_page.html">Inquiries</a>
+            </div>
+        </div>
+        <!-- Right Section -->
+        <div class="rightSection">
+
+        </div>
+    </header>
+
+    <main class="product-detail-page">
+        <p id="data-status" role="status">Loading shoe information…</p>
+        <div id="product-not-found" class="product-not-found" hidden>
+            <h1>Shoe not found</h1>
+            <p>That shoe may have been removed from the collection.</p>
+            <a href="product_lineup_page.html">Back to shoes</a>
+        </div>
+        <section id="product-detail" class="product-detail" aria-labelledby="detail-name" hidden>
+            <div class="product-gallery">
+                <div id="product-thumbnails" class="product-thumbnails" aria-label="Product images"></div>
+                <div class="product-gallery-main">
+                    <img id="gallery-main-image" alt="">
+                </div>
+            </div>
+            <div class="product-purchase">
+                <h1 id="detail-name"></h1>
+                <p id="detail-category" class="detail-category"></p>
+                <p id="detail-price" class="detail-price"></p>
+
+                <div class="size-heading">
+                    <h2>Select Size</h2>
+                    <details class="size-guide">
+                        <summary>↔ &nbsp; Size Guide</summary>
+                        <p>Sizes are shown in US men's and women's sizing.</p>
+                    </details>
+                </div>
+                <div id="size-options" class="size-options" aria-label="Available sizes"></div>
+                <p class="size-availability-note">Sample size options only; live inventory is not connected.</p>
+                <p id="product-action-status" class="product-action-status" role="status"></p>
+                <button id="add-to-bag" class="add-to-bag" type="button">Add to Bag</button>
+                <button id="detail-favorite" class="detail-favorite" type="button" aria-pressed="false">
+                    Favourite ♡
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script type="py" src="../py_script/product_information.py"></script>
+    <script type="py" src="../py_script/product_interaction.py"></script>
+    <script type="py" src="../py_script/scrolling.py"></script>
+</body>
+
+</html>

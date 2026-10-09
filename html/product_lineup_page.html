@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://pyscript.net" crossorigin>
     <link rel="stylesheet" href="../css/landing_page.css">
     <link rel="stylesheet" href="../css/button_styling.css">
     <link rel="stylesheet" href="../css/product_lineup.css">
@@ -45,6 +44,7 @@
             <p class="eyebrow">UNISOLE COLLECTION</p>
             <h1>Shoes</h1>
         </div>
+        <p id="data-status" role="status">Loading shoe information…</p>
         <div class="catalog-layout">
             <aside class="filter-sidebar" aria-label="Product filters">
                 <details class="filter-section" open>
@@ -105,6 +105,16 @@
                         <label><input type="checkbox"> High</label>
                     </div>
                 </details>
+
+                <details class="filter-section">
+                    <summary>Sport</summary>
+                    <div class="filter-options">
+                        <label><input type="checkbox"> Running</label>
+                        <label><input type="checkbox"> Basketball</label>
+                        <label><input type="checkbox"> Soccer</label>
+                        <label><input type="checkbox"> Tennis</label>
+                    </div>
+                </details>
             </aside>
 
             <section class="shoe-grid" id="shoe-grid" aria-label="Shoe collection"></section>
@@ -114,20 +124,23 @@
     <template id="shoe-card-template">
         <article class="product-card">
             <div class="product-image-wrap">
-                <img class="product-image" alt="" loading="lazy">
+                <a class="product-image-link" href="product_preview.html" aria-label="View shoe details">
+                    <img class="product-image" alt="" loading="lazy">
+                </a>
                 <button class="favorite-button" type="button" aria-label="Add to favorites" aria-pressed="false">
                     <img class="favorite-icon" src="../store_assets/favorite.svg" alt="" aria-hidden="true">
                 </button>
             </div>
             <div class="product-details">
                 <p class="product-price"></p>
-                <h2 class="product-name"></h2>
-                <p class="product-category">Men Performance</p>
-                <p class="product-badge">New</p>
+                <h2 class="product-name"><a class="product-name-link" href="product_preview.html"></a></h2>
+                <p class="product-category"></p>
             </div>
+            <div class="product-preview-selector" aria-label="Shoe image previews"></div>
         </article>
     </template>
 
+    <script type="py" src="../py_script/product_information.py"></script>
     <script type="py" src="../py_script/product_interaction.py"></script>
     <script type="py" src="../py_script/scrolling.py"></script>
 </body>
