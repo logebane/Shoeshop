@@ -1,0 +1,39 @@
+.tab {
+  height: 100%;
+  position: relative;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #000;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.tab a {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: #000;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.tab:hover::after,
+.tab:focus-within::after {
+  transform: scaleX(1);
+}

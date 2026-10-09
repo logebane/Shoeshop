@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://pyscript.net" crossorigin>
+    <link rel="stylesheet" href="../css/landing_page.css">
+    <link rel="stylesheet" href="../css/button_styling.css">
+    <link rel="stylesheet" href="../css/product_lineup.css">
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <title>Unisole</title>
+</head>
+
+<body>
+    <!-- header -->
+    <header>
+        <!-- Left Section -->
+        <div class="leftSection">
+            <div class="logo">
+                <img src="../store_assets/logo1.png" alt="Logo" width="50" height="50">
+            </div>
+        </div>
+        <!-- Middle Section -->
+        <div class="middleSection">
+            <div class="tab">
+                <a href="landing_page.html">Home</a>
+            </div>
+            <div class="tab">
+                <a href="product_lineup_page.html">Shoes</a>
+            </div>
+            <div class="tab">
+                <a href="product_lineup_page.html">Inquiries</a>
+            </div>
+        </div>
+        <!-- Right Section -->
+        <div class="rightSection">
+
+        </div>
+    </header>
+
+    <main class="product-page">
+        <div class="product-intro">
+            <p class="eyebrow">UNISOLE COLLECTION</p>
+            <h1>Shoes</h1>
+        </div>
+        <div class="catalog-layout">
+            <aside class="filter-sidebar" aria-label="Product filters">
+                <details class="filter-section" open>
+                    <summary>Gender <span class="filter-count"></span></summary>
+                    <div class="filter-options">
+                        <label><input type="checkbox" checked> Men</label>
+                        <label><input type="checkbox"> Women</label>
+                        <label><input type="checkbox"> Unisex</label>
+                    </div>
+                </details>
+
+                <details class="filter-section">
+                    <summary>Shop By Price</summary>
+                    <div class="filter-options">
+                        <label><input type="checkbox"> Under ₱2,000</label>
+                        <label><input type="checkbox"> ₱2,000–₱5,000</label>
+                        <label><input type="checkbox"> ₱5,000–₱10,000</label>
+                        <label><input type="checkbox"> Over ₱10,000</label>
+                    </div>
+                </details>
+
+                <details class="filter-section">
+                    <summary>Sale &amp; Offers</summary>
+                    <div class="filter-options">
+                        <label><input type="checkbox"> On sale</label>
+                        <label><input type="checkbox"> New arrivals</label>
+                    </div>
+                </details>
+
+                <details class="filter-section">
+                    <summary>Size</summary>
+                    <div class="filter-options filter-options-inline">
+                        <label><input type="checkbox"> 6</label>
+                        <label><input type="checkbox"> 7</label>
+                        <label><input type="checkbox"> 8</label>
+                        <label><input type="checkbox"> 9</label>
+                        <label><input type="checkbox"> 10</label>
+                        <label><input type="checkbox"> 11</label>
+                        <label><input type="checkbox"> 12</label>
+                    </div>
+                </details>
+
+                <details class="filter-section">
+                    <summary>Colour</summary>
+                    <div class="filter-options">
+                        <label><input type="checkbox"> Black</label>
+                        <label><input type="checkbox"> White</label>
+                        <label><input type="checkbox"> Blue</label>
+                        <label><input type="checkbox"> Red</label>
+                    </div>
+                </details>
+
+                <details class="filter-section">
+                    <summary>Shoe Height</summary>
+                    <div class="filter-options">
+                        <label><input type="checkbox"> Low</label>
+                        <label><input type="checkbox"> Mid</label>
+                        <label><input type="checkbox"> High</label>
+                    </div>
+                </details>
+            </aside>
+
+            <section class="shoe-grid" id="shoe-grid" aria-label="Shoe collection"></section>
+        </div>
+    </main>
+
+    <template id="shoe-card-template">
+        <article class="product-card">
+            <div class="product-image-wrap">
+                <img class="product-image" alt="" loading="lazy">
+                <button class="favorite-button" type="button" aria-label="Add to favorites" aria-pressed="false">
+                    <img class="favorite-icon" src="../store_assets/favorite.svg" alt="" aria-hidden="true">
+                </button>
+            </div>
+            <div class="product-details">
+                <p class="product-price"></p>
+                <h2 class="product-name"></h2>
+                <p class="product-category">Men Performance</p>
+                <p class="product-badge">New</p>
+            </div>
+        </article>
+    </template>
+
+    <script type="py" src="../py_script/product_interaction.py"></script>
+    <script type="py" src="../py_script/scrolling.py"></script>
+</body>
+
+</html>
