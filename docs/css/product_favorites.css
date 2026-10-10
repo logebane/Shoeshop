@@ -45,6 +45,18 @@
   box-shadow: 0 10px 28px rgb(0 0 0 / 18%);
 }
 
+#wishlist-grid .product-card.wishlist-card-slide-out {
+  pointer-events: none;
+  animation: wishlist-card-slide-right 420ms ease-in forwards;
+}
+
+@keyframes wishlist-card-slide-right {
+  to {
+    opacity: 0;
+    transform: translateX(100vw);
+  }
+}
+
 #wishlist-grid .product-image-wrap {
   position: relative;
   overflow: hidden;
@@ -233,5 +245,11 @@
     right: 16px;
     left: 16px;
     max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #wishlist-grid .product-card.wishlist-card-slide-out {
+    animation: none;
   }
 }

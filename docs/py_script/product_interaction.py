@@ -9,6 +9,7 @@ PAGE_DIRECTORY = str(window.location.pathname).rsplit("/", 1)[0]
 RESOURCE_PREFIX = "../" if PAGE_DIRECTORY.endswith("/html") else ""
 IMAGE_DIRECTORY = f"{RESOURCE_PREFIX}product_images/"
 CART_STORAGE_KEY = "unisole-cart"
+WISHLIST_STORAGE_KEY = "unisole-wishlist"
 
 
 def load_storage_map(key):
@@ -24,6 +25,18 @@ def load_storage_map(key):
 
 def save_storage_map(key, values):
     window.localStorage.setItem(key, json.dumps(values))
+
+
+def finish_wishlist_card_removal(event):
+    card = event.target
+    if event.animationName != "wishlist-card-slide-right":
+        return
+
+    card.remove()
+    grid = document.querySelector("#wishlist-grid")
+    empty_state = document.querySelector("#wishlist-empty")
+    if grid is not None and empty_state is not None:
+        empty_state.hidden = len(grid.children) > 0
 
 
 def show_preview(preview_button, animate=False):
@@ -117,19 +130,37 @@ def handle_catalog_click(event):
     add_to_cart_button = event.target.closest(".wishlist-add-to-cart")
     if add_to_cart_button is not None:
         card = add_to_cart_button.closest(".product-card")
+        if card.classList.contains("wishlist-card-slide-out"):
+            return
+
         product_id = card.getAttribute("data-product-id")
         quantity = int(card.querySelector(".quantity-value").textContent)
         cart = load_storage_map(CART_STORAGE_KEY)
         cart[product_id] = int(cart.get(product_id, 0)) + quantity
         save_storage_map(CART_STORAGE_KEY, cart)
+
+        wishlist_grid = document.querySelector("#wishlist-grid")
+        if wishlist_grid is not None and wishlist_grid.contains(card):
+            wishlist = load_storage_map(WISHLIST_STORAGE_KEY)
+            wishlist.pop(product_id, None)
+            save_storage_map(WISHLIST_STORAGE_KEY, wishlist)
+            if window.matchMedia("(prefers-reduced-motion: reduce)").matches:
+                card.remove()
+                empty_state = document.querySelector("#wishlist-empty")
+                if empty_state is not None:
+                    empty_state.hidden = len(wishlist_grid.children) > 0
+            else:
+                card.classList.add("wishlist-card-slide-out")
+
         status = document.querySelector("#wishlist-status")
-        status.textContent = (
-            f"Added {quantity} × {card.getAttribute('data-name')} to cart."
-        )
-        status.hidden = False
-        status.style.animation = "none"
-        status.offsetWidth
-        status.style.animation = ""
+        if status is not None:
+            status.textContent = (
+                f"Added {quantity} × {card.getAttribute('data-name')} to cart."
+            )
+            status.hidden = False
+            status.style.animation = "none"
+            status.offsetWidth
+            status.style.animation = ""
         return
 
 
@@ -259,6 +290,11 @@ wishlist_grid = document.querySelector("#wishlist-grid")
 for catalog_grid in (shoe_grid, wishlist_grid):
     if catalog_grid is not None:
         catalog_grid.addEventListener("click", create_proxy(handle_catalog_click))
+
+if wishlist_grid is not None:
+    wishlist_grid.addEventListener(
+        "animationend", create_proxy(finish_wishlist_card_removal)
+    )
 
 if shoe_grid is not None:
     shoe_grid.addEventListener("mouseover", create_proxy(handle_preview_hover))
