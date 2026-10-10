@@ -45,17 +45,16 @@ def apply_filters_and_sort(_event=None):
     if sort_mode == "name-asc":
         cards.sort(key=lambda card: card.getAttribute("data-name").casefold())
     elif sort_mode in ("price-asc", "price-desc"):
-        priced_cards = [
-            card for card in cards if card.getAttribute("data-price")
-        ]
-        unpriced_cards = [
-            card for card in cards if not card.getAttribute("data-price")
-        ]
-        priced_cards.sort(
-            key=lambda card: float(card.getAttribute("data-price")),
-            reverse=sort_mode == "price-desc",
-        )
-        cards = priced_cards + unpriced_cards
+        descending = sort_mode == "price-desc"
+
+        def price_sort_key(card):
+            price = card.getAttribute("data-price")
+            if not price:
+                return (True, 0)
+            value = float(price)
+            return (False, -value if descending else value)
+
+        cards.sort(key=price_sort_key)
     else:
         cards.sort(key=lambda card: int(card.getAttribute("data-catalog-index")))
 

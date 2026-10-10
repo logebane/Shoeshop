@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/product_preview.css">
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <link rel="icon" type="image/png" href="store_assets/logo_2.png">
     <title>Shoe details | UniSole</title>
 </head>
 
@@ -22,29 +23,38 @@
         </div>
         <span class="site-loader-label">Loading...</span>
     </div>
-    <!-- header -->
     <header>
-        <!-- Left Section -->
         <div class="leftSection">
-            <div class="logo">
-                <img src="store_assets/logo_2.png" alt="Logo" width="50" height="50">
-            </div>
+            <a class="logo" href="index.html" aria-label="UniSole home">
+                <img src="store_assets/logo_2.png" alt="UniSole" width="50" height="50">
+            </a>
         </div>
-        <!-- Middle Section -->
-        <div class="middleSection">
-            <div class="tab">
-                <a href="index.html">Home</a>
-            </div>
-            <div class="tab">
-                <a href="product_lineup_page.html">Shoes</a>
-            </div>
-            <div class="tab">
-                <a href="product_lineup_page.html">Inquiries</a>
-            </div>
-        </div>
-        <!-- Right Section -->
+        <nav class="middleSection" aria-label="Main navigation">
+            <div class="tab"><a href="index.html">Home</a></div>
+            <div class="tab"><a href="product_lineup_page.html" aria-current="page">Shoes</a></div>
+            <div class="tab"><a href="product_lineup_page.html">Inquiries</a></div>
+        </nav>
         <div class="rightSection">
-
+            <a class="favorites-link" href="favorites.html" aria-label="Favorites">
+                <img src="store_assets/favorite.svg" alt="" aria-hidden="true">
+            </a>
+            <a class="checkout-link" href="checkout.html" aria-label="Checkout">
+                <img class="checkout-icon" src="store_assets/checkout.png" alt="" aria-hidden="true">
+            </a>
+            <details class="site-mobile-menu">
+                <summary aria-label="Open navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </summary>
+                <nav class="site-mobile-menu-links" aria-label="Mobile navigation">
+                    <a href="index.html">Home</a>
+                    <a href="product_lineup_page.html">Shoes</a>
+                    <a href="product_lineup_page.html">Inquiries</a>
+                    <a href="favorites.html">Favorites</a>
+                    <a href="checkout.html">Checkout</a>
+                </nav>
+            </details>
         </div>
     </header>
 
@@ -89,6 +99,7 @@
 
     <script type="py" src="py_script/loading.py"></script>
     <script type="py" src="py_script/product_information.py"></script>
+    <script type="py" src="py_script/favorites.py"></script>
     <script type="py" src="py_script/product_interaction.py"></script>
     <script type="py" src="py_script/scrolling.py"></script>
 </body>

@@ -4,6 +4,7 @@ def init_header_scroll_behavior():
 
     header = document.querySelector("header")
     back_to_top = document.querySelector(".back-to-top")
+    mobile_menu = document.querySelector(".site-mobile-menu")
     previous_scroll_y = window.scrollY
 
     def handle_scroll(_event):
@@ -11,6 +12,9 @@ def init_header_scroll_behavior():
 
         current_scroll_y = window.scrollY
         scrolling_down = current_scroll_y > previous_scroll_y
+        if scrolling_down and mobile_menu is not None:
+            mobile_menu.open = False
+
         if back_to_top is not None:
             back_to_top.classList.toggle("back-to-top-hidden", current_scroll_y <= 8)
 

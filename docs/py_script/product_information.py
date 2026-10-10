@@ -9,6 +9,8 @@ from pyodide.http import pyfetch
 PAGE_DIRECTORY = str(window.location.pathname).rsplit("/", 1)[0]
 RESOURCE_PREFIX = "../" if PAGE_DIRECTORY.endswith("/html") else ""
 IMAGE_DIRECTORY = f"{RESOURCE_PREFIX}product_images/"
+STORE_ASSET_DIRECTORY = f"{RESOURCE_PREFIX}store_assets/"
+WISHLIST_STORAGE_KEY = "unisole-wishlist"
 
 
 async def load_shoes():
@@ -31,17 +33,47 @@ def signal_shoe_data_state(state):
     document.dispatchEvent(window.Event.new(event_name))
 
 
+def load_storage_map(key):
+    stored_value = window.localStorage.getItem(key)
+    if stored_value is None:
+        return {}
+
+    values = json.loads(str(stored_value))
+    if not isinstance(values, dict):
+        raise ValueError(f"Stored {key} data must be a JSON object.")
+    return values
+
+
 def render_catalog(shoes):
-    shoe_grid = document.querySelector("#shoe-grid")
+    shoe_grid = document.querySelector("#wishlist-grid")
+    is_wishlist = shoe_grid is not None
+    if not is_wishlist:
+        shoe_grid = document.querySelector("#shoe-grid")
     template = document.querySelector("#shoe-card-template")
+    wishlist = load_storage_map(WISHLIST_STORAGE_KEY)
 
     for shoe in shoes:
+        if is_wishlist and shoe["id"] not in wishlist:
+            continue
+
         card = template.content.cloneNode(True)
         card_element = card.querySelector(".product-card")
+        card_element.setAttribute("data-product-id", shoe["id"])
         card_element.setAttribute("data-name", shoe["name"])
         card_element.setAttribute("data-price", "" if shoe["price"] is None else str(shoe["price"]))
         card_element.setAttribute("data-tags", json.dumps(shoe.get("tags", {})))
         card_element.setAttribute("data-catalog-index", str(len(shoe_grid.children)))
+        favorite_button = card.querySelector(".favorite-button")
+        is_favorite = shoe["id"] in wishlist
+        favorite_button.setAttribute("aria-pressed", str(is_favorite).lower())
+        favorite_button.setAttribute(
+            "aria-label",
+            "Remove from favorites" if is_favorite else "Add to favorites",
+        )
+        card.querySelector(".favorite-icon").setAttribute(
+            "src",
+            f"{STORE_ASSET_DIRECTORY}{'favorite_2.svg' if is_favorite else 'favorite.svg'}",
+        )
         image = card.querySelector(".product-image")
         image.src = IMAGE_DIRECTORY + shoe["images"][0]
         image.alt = shoe["name"]
@@ -60,34 +92,47 @@ def render_catalog(shoes):
         )
         card.querySelector(".product-category").textContent = shoe["category"]
 
+        quantity_value = card.querySelector(".quantity-value")
+        if quantity_value is not None:
+            quantity = wishlist[shoe["id"]]
+            if not isinstance(quantity, int) or isinstance(quantity, bool) or quantity < 1:
+                raise ValueError(f"Invalid wishlist quantity for {shoe['id']}.")
+            quantity_value.textContent = str(quantity)
+            card.querySelector('[data-quantity-change="-1"]').disabled = quantity <= 1
+
         preview_selector = card.querySelector(".product-preview-selector")
-        for preview_index, image_name in enumerate(shoe["images"]):
-            preview_button = document.createElement("button")
-            preview_button.type = "button"
-            preview_button.className = "preview-option"
-            preview_button.setAttribute(
-                "aria-pressed", str(preview_index == 0).lower()
-            )
-            preview_button.setAttribute(
-                "aria-label", f"Preview {shoe['name']} image {preview_index + 1}"
-            )
-            preview_button.setAttribute("data-image", image_name)
-            preview_button.setAttribute("data-name", shoe["name"])
-            preview_button.setAttribute(
-                "data-product-url", product_link.getAttribute("href")
-            )
+        if preview_selector is not None:
+            for preview_index, image_name in enumerate(shoe["images"]):
+                preview_button = document.createElement("button")
+                preview_button.type = "button"
+                preview_button.className = "preview-option"
+                preview_button.setAttribute(
+                    "aria-pressed", str(preview_index == 0).lower()
+                )
+                preview_button.setAttribute(
+                    "aria-label", f"Preview {shoe['name']} image {preview_index + 1}"
+                )
+                preview_button.setAttribute("data-image", image_name)
+                preview_button.setAttribute("data-name", shoe["name"])
+                preview_button.setAttribute(
+                    "data-product-url", product_link.getAttribute("href")
+                )
 
-            preview_thumbnail = document.createElement("img")
-            preview_thumbnail.src = IMAGE_DIRECTORY + image_name
-            preview_thumbnail.alt = ""
-            preview_thumbnail.loading = "lazy"
-            preview_button.append(preview_thumbnail)
-            preview_selector.append(preview_button)
+                preview_thumbnail = document.createElement("img")
+                preview_thumbnail.src = IMAGE_DIRECTORY + image_name
+                preview_thumbnail.alt = ""
+                preview_thumbnail.loading = "lazy"
+                preview_button.append(preview_thumbnail)
+                preview_selector.append(preview_button)
 
-        if len(shoe["images"]) < 2:
+        if preview_selector is not None and len(shoe["images"]) < 2:
             preview_selector.remove()
 
         shoe_grid.append(card)
+
+    empty_state = document.querySelector("#wishlist-empty")
+    if empty_state is not None:
+        empty_state.hidden = len(shoe_grid.children) > 0
 
     document.dispatchEvent(window.Event.new("shoe-catalog-ready"))
 
@@ -100,6 +145,7 @@ def render_product(shoes):
         return
 
     document.querySelector("#product-detail").hidden = False
+    document.querySelector("#product-detail").setAttribute("data-product-id", shoe["id"])
     set_text("#detail-name", shoe["name"])
     set_text("#detail-category", shoe["category"])
     set_text(
@@ -109,6 +155,10 @@ def render_product(shoes):
     main_image = document.querySelector("#gallery-main-image")
     main_image.src = IMAGE_DIRECTORY + shoe["images"][0]
     main_image.alt = shoe["name"]
+    favorite_button = document.querySelector("#detail-favorite")
+    is_favorite = shoe["id"] in load_storage_map(WISHLIST_STORAGE_KEY)
+    favorite_button.setAttribute("aria-pressed", str(is_favorite).lower())
+    favorite_button.textContent = "Favourite ♥" if is_favorite else "Favourite ♡"
 
     thumbnails = document.querySelector("#product-thumbnails")
     for image_index, image_name in enumerate(shoe["images"]):
@@ -139,6 +189,11 @@ async def initialize():
     try:
         shoes = await load_shoes()
         if document.querySelector("#shoe-grid") is not None:
+            render_catalog(shoes)
+            status = document.querySelector("#data-status")
+            if status is not None:
+                status.hidden = True
+        elif document.querySelector("#wishlist-grid") is not None:
             render_catalog(shoes)
             status = document.querySelector("#data-status")
             if status is not None:

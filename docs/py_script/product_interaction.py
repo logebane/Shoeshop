@@ -1,3 +1,4 @@
+import json
 import random
 
 from js import document, window
@@ -7,7 +8,22 @@ from pyodide.ffi import create_proxy
 PAGE_DIRECTORY = str(window.location.pathname).rsplit("/", 1)[0]
 RESOURCE_PREFIX = "../" if PAGE_DIRECTORY.endswith("/html") else ""
 IMAGE_DIRECTORY = f"{RESOURCE_PREFIX}product_images/"
-STORE_ASSET_DIRECTORY = f"{RESOURCE_PREFIX}store_assets/"
+CART_STORAGE_KEY = "unisole-cart"
+
+
+def load_storage_map(key):
+    stored_value = window.localStorage.getItem(key)
+    if stored_value is None:
+        return {}
+
+    values = json.loads(str(stored_value))
+    if not isinstance(values, dict):
+        raise ValueError(f"Stored {key} data must be a JSON object.")
+    return values
+
+
+def save_storage_map(key, values):
+    window.localStorage.setItem(key, json.dumps(values))
 
 
 def show_preview(preview_button, animate=False):
@@ -98,19 +114,23 @@ def handle_catalog_click(event):
             window.location.href = product_url
         return
 
-    favorite_button = event.target.closest(".favorite-button")
-    if favorite_button is not None:
-        is_favorite = favorite_button.getAttribute("aria-pressed") != "true"
-        favorite_button.setAttribute("aria-pressed", str(is_favorite).lower())
-        favorite_button.setAttribute(
-            "aria-label",
-            "Remove from favorites" if is_favorite else "Add to favorites",
+    add_to_cart_button = event.target.closest(".wishlist-add-to-cart")
+    if add_to_cart_button is not None:
+        card = add_to_cart_button.closest(".product-card")
+        product_id = card.getAttribute("data-product-id")
+        quantity = int(card.querySelector(".quantity-value").textContent)
+        cart = load_storage_map(CART_STORAGE_KEY)
+        cart[product_id] = int(cart.get(product_id, 0)) + quantity
+        save_storage_map(CART_STORAGE_KEY, cart)
+        status = document.querySelector("#wishlist-status")
+        status.textContent = (
+            f"Added {quantity} × {card.getAttribute('data-name')} to cart."
         )
-        favorite_button.querySelector(".favorite-icon").src = (
-            f"{STORE_ASSET_DIRECTORY}favorite_2.svg"
-            if is_favorite
-            else f"{STORE_ASSET_DIRECTORY}favorite.svg"
-        )
+        status.hidden = False
+        status.style.animation = "none"
+        status.offsetWidth
+        status.style.animation = ""
+        return
 
 
 def handle_detail_click(event):
@@ -129,15 +149,6 @@ def handle_detail_click(event):
             option.setAttribute("aria-pressed", str(option == thumbnail).lower())
         return
 
-    favorite_button = event.target.closest("#detail-favorite")
-    if favorite_button is not None:
-        is_favorite = favorite_button.getAttribute("aria-pressed") != "true"
-        favorite_button.setAttribute("aria-pressed", str(is_favorite).lower())
-        favorite_button.textContent = (
-            "Favourite ♥" if is_favorite else "Favourite ♡"
-        )
-        return
-
     add_button = event.target.closest("#add-to-bag")
     if add_button is not None:
         selected_size = next(
@@ -152,6 +163,12 @@ def handle_detail_click(event):
         if selected_size is None:
             status.textContent = "Please select a size first."
             return
+        product_id = document.querySelector("#product-detail").getAttribute(
+            "data-product-id"
+        )
+        cart = load_storage_map(CART_STORAGE_KEY)
+        cart[product_id] = int(cart.get(product_id, 0)) + 1
+        save_storage_map(CART_STORAGE_KEY, cart)
         status.textContent = f"Added to bag — {selected_size}."
 
 
@@ -238,8 +255,12 @@ def on_cards_intersect(entries, _observer):
 
 
 shoe_grid = document.querySelector("#shoe-grid")
+wishlist_grid = document.querySelector("#wishlist-grid")
+for catalog_grid in (shoe_grid, wishlist_grid):
+    if catalog_grid is not None:
+        catalog_grid.addEventListener("click", create_proxy(handle_catalog_click))
+
 if shoe_grid is not None:
-    shoe_grid.addEventListener("click", create_proxy(handle_catalog_click))
     shoe_grid.addEventListener("mouseover", create_proxy(handle_preview_hover))
     shoe_grid.addEventListener("mouseout", create_proxy(restore_original_image))
     mobile_preview_state_handler = create_proxy(sync_visible_card_timers)
