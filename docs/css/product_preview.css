@@ -181,6 +181,94 @@
 .product-action-status {
   min-height: 1.25em;
   margin: 12px 0 8px;
+  color: #df1c1c;
+}
+
+.bag-added-dialog {
+  width: min(420px, calc(100% - 48px));
+  box-sizing: border-box;
+  padding: 28px;
+  border: 0;
+  border-radius: 12px;
+  color: #111;
+  font-family: Arial, sans-serif;
+}
+
+.bag-added-dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+}
+
+.bag-added-dialog h2 {
+  margin: 0 0 12px;
+}
+
+.bag-added-dialog p {
+  line-height: 1.5;
+}
+
+.bag-added-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.bag-added-dialog-actions button,
+.bag-added-dialog-actions a {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 8px 16px;
+  border: 1px solid #111;
+  border-radius: 22px;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.bag-added-dialog-actions button {
+  background: #fff;
+  color: #111;
+}
+
+.bag-added-dialog-actions button:focus-visible,
+.bag-added-dialog-actions a:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .bag-added-dialog {
+    width: calc(100% - 32px);
+    padding: 20px;
+  }
+
+  .bag-added-dialog-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .bag-added-dialog-actions button,
+  .bag-added-dialog-actions a {
+    min-width: 0;
+    padding-right: 10px;
+    padding-left: 10px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .bag-added-dialog-actions {
+    grid-template-columns: 1fr;
+  }
 }
 
 .add-to-bag,

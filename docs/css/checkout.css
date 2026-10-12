@@ -81,11 +81,18 @@
 .bag-remove-button {
   margin-left: 6px;
   font-size: 0.8rem;
-  text-decoration: underline;
+  background: #df1c1c;
+  color: #fff;
 }
 
 .summary-section h2 {
   margin-bottom: 24px;
+}
+
+.summary-section {
+  position: sticky;
+  top: 90px;
+  align-self: start;
 }
 
 .summary-lines {
@@ -167,16 +174,87 @@
   color: #8b1e1e;
 }
 
+.remove-item-dialog {
+  width: min(420px, calc(100% - 48px));
+  box-sizing: border-box;
+  padding: 28px;
+  border: 0;
+  border-radius: 12px;
+  color: #111;
+  font-family: "Poppins", sans-serif;
+}
+
+.remove-item-dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+}
+
+.remove-item-dialog h2 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.remove-item-dialog p {
+  line-height: 1.5;
+}
+
+.remove-item-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.remove-item-dialog-actions button {
+  min-height: 42px;
+  padding: 8px 16px;
+  border: 1px solid #111;
+  border-radius: 22px;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.remove-item-cancel {
+  background: #fff;
+  color: #111;
+}
+
+.remove-item-confirm {
+  background: #df1c1c;
+  color: #fff;
+}
+
+.remove-item-dialog-actions button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
 @media (max-width: 700px) {
+  .remove-item-dialog-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .remove-item-dialog-actions button {
+    width: 100%;
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
   .checkout-page {
     grid-template-columns: 1fr;
     gap: 44px;
-    padding: 28px 20px 380px;
+    padding: 28px 20px 300px;
   }
 
   .summary-section {
     position: fixed;
+    top: auto;
     z-index: 90;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
     right: 0;
     bottom: 0;
     left: 0;
@@ -184,14 +262,41 @@
     max-height: min(65vh, 420px);
     max-height: min(65dvh, 420px);
     overflow-y: auto;
-    padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
     border-top: 1px solid #dedede;
     background: #fff;
     box-shadow: 0 -4px 16px rgb(0 0 0 / 8%);
   }
 
   .summary-section h2 {
-    margin-bottom: 12px;
+    grid-column: 1 / -1;
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+  }
+
+  .summary-lines {
+    grid-column: 1 / -1;
+  }
+
+  .summary-lines > div {
+    gap: 8px;
+    padding-bottom: 7px;
+    font-size: 0.9rem;
+  }
+
+  .summary-lines > div + div {
+    padding-top: 0;
+  }
+
+  .summary-lines .summary-total {
+    margin-top: 4px;
+    padding: 9px 0;
+  }
+
+  .checkout-action {
+    min-height: 44px;
+    margin-top: 0;
+    font-size: 0.85rem;
   }
 
   .bag-item {

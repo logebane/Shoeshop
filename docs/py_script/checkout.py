@@ -11,6 +11,7 @@ DELIVERY_FEE = 0
 PAGE_DIRECTORY = str(window.location.pathname).rsplit("/", 1)[0]
 RESOURCE_PREFIX = "../" if PAGE_DIRECTORY.endswith("/html") else ""
 IMAGE_DIRECTORY = f"{RESOURCE_PREFIX}product_images/"
+pending_removal_id = None
 
 
 def load_cart():
@@ -117,6 +118,15 @@ def render_cart(shoes):
     )
 
 
+def remove_cart_item(product_id):
+    cart = load_cart()
+    cart.pop(product_id, None)
+    save_cart(cart)
+    bag_items = document.querySelector("#bag-items")
+    bag_items.replaceChildren()
+    render_cart(shoes_data)
+
+
 async def load_shoes():
     response = await pyfetch(f"{RESOURCE_PREFIX}data/shoes.json")
     if not response.ok:
@@ -131,18 +141,39 @@ def handle_cart_click(event):
 
     item = button.closest(".bag-item")
     product_id = item.getAttribute("data-product-id")
-    cart = load_cart()
     if button.hasAttribute("data-remove-item"):
-        cart.pop(product_id, None)
-    else:
-        cart[product_id] = max(
-            1,
-            cart[product_id] + int(button.getAttribute("data-quantity-change")),
+        global pending_removal_id
+        pending_removal_id = product_id
+        document.querySelector("#remove-item-name").textContent = (
+            item.querySelector(".bag-item-name").textContent
         )
+        document.querySelector("#remove-item-dialog").showModal()
+        return
+
+    cart = load_cart()
+    cart[product_id] = max(
+        1,
+        cart[product_id] + int(button.getAttribute("data-quantity-change")),
+    )
     save_cart(cart)
     bag_items = document.querySelector("#bag-items")
     bag_items.replaceChildren()
     render_cart(shoes_data)
+
+
+def handle_remove_confirmation(_event):
+    global pending_removal_id
+    product_id = pending_removal_id
+    pending_removal_id = None
+    document.querySelector("#remove-item-dialog").close()
+    if product_id is not None:
+        remove_cart_item(product_id)
+
+
+def handle_remove_cancel(_event):
+    global pending_removal_id
+    pending_removal_id = None
+    document.querySelector("#remove-item-dialog").close()
 
 
 async def initialize():
@@ -153,6 +184,15 @@ async def initialize():
         render_cart(shoes_data)
         document.querySelector("#bag-items").addEventListener(
             "click", create_proxy(handle_cart_click)
+        )
+        document.querySelector("#cancel-remove-item").addEventListener(
+            "click", create_proxy(handle_remove_cancel)
+        )
+        document.querySelector("#remove-item-dialog").addEventListener(
+            "cancel", create_proxy(handle_remove_cancel)
+        )
+        document.querySelector("#confirm-remove-item").addEventListener(
+            "click", create_proxy(handle_remove_confirmation)
         )
     except Exception as error:
         status.textContent = f"Unable to load your bag: {error}"

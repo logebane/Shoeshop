@@ -155,7 +155,7 @@ def handle_catalog_click(event):
         status = document.querySelector("#wishlist-status")
         if status is not None:
             status.textContent = (
-                f"Added {quantity} × {card.getAttribute('data-name')} to cart."
+                f"Added {quantity} × {card.getAttribute('data-name')} to bag."
             )
             status.hidden = False
             status.style.animation = "none"
@@ -200,7 +200,19 @@ def handle_detail_click(event):
         cart = load_storage_map(CART_STORAGE_KEY)
         cart[product_id] = int(cart.get(product_id, 0)) + 1
         save_storage_map(CART_STORAGE_KEY, cart)
-        status.textContent = f"Added to bag — {selected_size}."
+        status.textContent = ""
+        for option in document.querySelectorAll(".size-option"):
+            option.setAttribute("aria-pressed", "false")
+
+        product_name = document.querySelector("#detail-name").textContent
+        document.querySelector("#bag-added-message").textContent = (
+            f"{product_name} (size {selected_size}) was added to your bag."
+        )
+        document.querySelector("#bag-added-dialog").showModal()
+
+
+def close_bag_added_dialog(_event):
+    document.querySelector("#bag-added-dialog").close()
 
 
 def handle_preview_hover(event):
@@ -255,7 +267,7 @@ def start_card_timer(card_id, card):
         return
 
     timer_callback = create_proxy(lambda: rotate_card_preview(card))
-    interval_id = window.setInterval(timer_callback, 5000)
+    interval_id = window.setInterval(timer_callback, 4000)
     active_card_timers[card_id] = (interval_id, timer_callback)
 
 
@@ -318,3 +330,6 @@ if shoe_grid is not None:
 
 if document.querySelector("#product-detail") is not None:
     document.addEventListener("click", create_proxy(handle_detail_click))
+    document.querySelector("#close-bag-added-dialog").addEventListener(
+        "click", create_proxy(close_bag_added_dialog)
+    )

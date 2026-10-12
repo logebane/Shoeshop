@@ -235,6 +235,21 @@ header.header-hidden {
     height: 2px;
     border-radius: 2px;
     background: #111;
+    transition:
+      transform 180ms ease,
+      opacity 180ms ease;
+  }
+
+  .site-mobile-menu[open] > summary span:first-child {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .site-mobile-menu[open] > summary span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .site-mobile-menu[open] > summary span:last-child {
+    transform: translateY(-7px) rotate(-45deg);
   }
 
   .site-mobile-menu > summary:focus-visible {
@@ -266,5 +281,11 @@ header.header-hidden {
   .site-mobile-menu-links a:hover,
   .site-mobile-menu-links a:focus-visible {
     background: #f3f3f3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-mobile-menu > summary span {
+    transition: none;
   }
 }

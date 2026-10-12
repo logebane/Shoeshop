@@ -92,6 +92,16 @@
         </aside>
     </main>
 
+    <dialog class="remove-item-dialog" id="remove-item-dialog" aria-labelledby="remove-item-heading"
+        aria-describedby="remove-item-message">
+        <h2 id="remove-item-heading">Remove item?</h2>
+        <p id="remove-item-message">Are you sure you want to remove <span id="remove-item-name"></span> from your bag?</p>
+        <div class="remove-item-dialog-actions">
+            <button class="remove-item-cancel" id="cancel-remove-item" type="button">Keep item</button>
+            <button class="remove-item-confirm" id="confirm-remove-item" type="button">Remove item</button>
+        </div>
+    </dialog>
+
     <script type="py" src="py_script/loading.py"></script>
     <script type="py" src="py_script/checkout.py"></script>
     <script type="py" src="py_script/scrolling.py"></script>
