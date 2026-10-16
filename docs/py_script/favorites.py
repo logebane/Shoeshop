@@ -8,6 +8,8 @@ WISHLIST_STORAGE_KEY = "unisole-wishlist"
 PAGE_DIRECTORY = str(window.location.pathname).rsplit("/", 1)[0]
 RESOURCE_PREFIX = "../" if PAGE_DIRECTORY.endswith("/html") else ""
 STORE_ASSET_DIRECTORY = f"{RESOURCE_PREFIX}store_assets/"
+favorite_toast_timer = None
+favorite_callbacks = []
 
 
 def load_wishlist():
@@ -23,6 +25,36 @@ def load_wishlist():
 
 def save_wishlist(wishlist):
     window.localStorage.setItem(WISHLIST_STORAGE_KEY, json.dumps(wishlist))
+
+
+def show_home_favorite_toast(message):
+    global favorite_toast_timer
+
+    status = document.querySelector("#featured-products-status")
+    if status is None:
+        section = document.querySelector(".featured-products")
+        if section is None:
+            return
+        status = document.createElement("p")
+        status.id = "featured-products-status"
+        status.className = "featured-products-status"
+        status.setAttribute("role", "status")
+        status.setAttribute("aria-live", "polite")
+        section.append(status)
+
+    status.textContent = message
+    status.hidden = False
+    status.classList.add("is-toast", "is-visible")
+    if favorite_toast_timer is not None:
+        window.clearTimeout(favorite_toast_timer)
+
+    def hide_toast():
+        status.classList.remove("is-visible")
+        status.remove()
+
+    proxy = create_proxy(hide_toast)
+    favorite_callbacks.append(proxy)
+    favorite_toast_timer = window.setTimeout(proxy, 2500)
 
 
 def update_wishlist_empty_state():
@@ -53,6 +85,11 @@ def handle_favorite_click(event):
             "src",
             f"{STORE_ASSET_DIRECTORY}{'favorite_2.svg' if is_favorite else 'favorite.svg'}",
         )
+        if card.closest("#featured-products-grid") is not None:
+            show_home_favorite_toast(
+                f"{card.getAttribute('data-name')} "
+                f"{'added to' if is_favorite else 'removed from'} favorites."
+            )
         if document.querySelector("#wishlist-grid") is not None and not is_favorite:
             card.remove()
             update_wishlist_empty_state()
