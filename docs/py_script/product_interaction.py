@@ -71,54 +71,6 @@ def restore_original_image(event):
         option.setAttribute("aria-pressed", str(is_original).lower())
 
 
-def ensure_preview_selector(card):
-    preview_selector = card.querySelector(".product-preview-selector")
-    if preview_selector is not None:
-        return preview_selector
-
-    shoe_cards = document.querySelectorAll("#shoe-grid .product-card")
-    card_index = next(
-        (index for index, shoe_card in enumerate(shoe_cards) if shoe_card == card),
-        None,
-    )
-    if card_index is None or not shoe_cards:
-        return None
-
-    preview_selector = document.createElement("div")
-    preview_selector.className = "product-preview-selector"
-    preview_selector.setAttribute("aria-label", "Shoe image previews")
-
-    current_card = shoe_cards[card_index]
-    next_card = shoe_cards[(card_index + 1) % len(shoe_cards)]
-    for preview_card in (current_card, next_card):
-        preview_image = preview_card.querySelector(".product-image")
-        image_name = preview_image.getAttribute("data-original-image")
-        shoe_name = preview_image.getAttribute("data-original-name")
-        if not image_name:
-            continue
-
-        option = document.createElement("button")
-        option.type = "button"
-        option.className = "preview-option"
-        option.setAttribute("aria-pressed", str(preview_card == current_card).lower())
-        option.setAttribute("aria-label", f"Preview {shoe_name} image")
-        option.setAttribute("data-image", image_name)
-        option.setAttribute("data-name", shoe_name)
-        product_link = preview_card.querySelector(".product-image-link")
-        if product_link is not None:
-            option.setAttribute("data-product-url", product_link.getAttribute("href"))
-
-        thumbnail = document.createElement("img")
-        thumbnail.src = f"{IMAGE_DIRECTORY}{image_name}"
-        thumbnail.alt = ""
-        thumbnail.loading = "lazy"
-        option.append(thumbnail)
-        preview_selector.append(option)
-
-    card.append(preview_selector)
-    return preview_selector
-
-
 def handle_catalog_click(event):
     preview_button = event.target.closest(".preview-option")
     if preview_button is not None:
@@ -222,11 +174,6 @@ def handle_preview_hover(event):
         if previous_target is not None and preview_button.contains(previous_target):
             return
         show_preview(preview_button)
-        return
-
-    card = event.target.closest(".product-card")
-    if card is not None:
-        ensure_preview_selector(card)
 
 
 def rotate_card_preview(card):
